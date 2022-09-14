@@ -1,0 +1,56 @@
+#todo-info-container {
+    width: 500px;
+    height: 400px;
+    border: 15px solid rgb(72, 72, 72);
+    display: flex;
+    flex-direction: column;
+}
+
+#todo-info-title {
+    width: 500px;
+    height: 90px;
+}
+
+#todo-info-content {
+    width: 500px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#todo-info-btn-container {
+    width: 500px;
+    height: 60px;
+}
+
+.todo-info-info {
+    margin-left: 20px;
+}
+
+.todo-action-button {
+    height: 60px;
+    font-size: 25px;
+    line-height: 60px;
+    cursor: pointer;
+}
+
+.todo-action-button:hover {
+    opacity: 80%;
+}
+
+#todo-undo-button {
+    background-color: lightcoral;
+}
+
+#todo-complete-button {
+    background-color: lightgreen;
+}
+
+#todo-info-nav {
+    position: absolute;
+    margin-left: 10px;
+    text-decoration: underline;
+    color: cornflowerblue;
+    cursor: pointer;
+}
