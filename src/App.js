@@ -3,34 +3,12 @@ import { useState } from 'react';
 import { TodoInfoView } from './views/TodoInfoView';
 import { TodoListView } from './views/TodoListView';
 import { TodoCreateView } from './views/TodoCreateView';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { todoListState, viewState } from './state';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
-  let [view, setView] = useState('list');
-  let [viewData, setViewData] = useState(undefined);
-  let [todos, setTodos] = useState([
-    {
-      id: 0,
-      description: 'Städa',
-      createdDate: new Date(),
-      completed: true,
-      completedDate: new Date()
-    },
-    {
-      id: 1,
-      description: 'Handla mat',
-      createdDate: new Date(),
-      completed: false,
-      completedDate: new Date()
-
-    },
-    {
-      id: 2,
-      description: 'Tvätta kläder',
-      createdDate: new Date(),
-      completed: false,
-      completedDate: new Date()
-    },
-  ]);
+  let [todos, setTodos] = useRecoilState(todoListState);
 
   const removeTodo = todo => {
     setTodos(todos.filter(all => all.id !== todo.id));
@@ -57,31 +35,14 @@ function App() {
     }));
   }
 
-  let component;
-  if (view === 'list') {
-    component = <TodoListView
-                  todos={todos} 
-                  setView={setView}
-                  removeTodo={removeTodo}
-                  viewData={viewData} 
-                  setViewData={setViewData} />
-  } else if (view === 'info') {
-    component = <TodoInfoView 
-                   todos={todos} 
-                   updateTodo={updateTodo} 
-                   setView={setView} 
-                   viewData={viewData} 
-                   setViewData={setViewData} />;
-  } else if (view === 'create') {
-    component = <TodoCreateView
-                   createTodo={createTodo}
-                   setView={setView} />;
-   }
-
   return (
-    <div className="App">
-      {component}
-    </div>
+      <div className="App">
+      <Routes>
+        <Route path="/" element={<TodoListView removeTodo={removeTodo} />}/>
+        <Route path="/info/:id" element={<TodoInfoView updateTodo={updateTodo} />}/>
+        <Route path="/create" element={<TodoCreateView createTodo={createTodo} />}/>
+      </Routes>
+      </div>
   );
 }
 

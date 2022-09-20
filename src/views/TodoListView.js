@@ -1,6 +1,12 @@
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { todoListState, viewState } from "../state";
 import "./TodoListView.css";
 
 function TodoListView(props) {
+    let navigate = useNavigate();
+    let todos = useRecoilValue(todoListState);
+
     const removeTodo = (event, todo) => {
         event.stopPropagation();
         props.removeTodo(todo);
@@ -8,10 +14,7 @@ function TodoListView(props) {
 
     const mapTodo = todo => {
         const handle = () => {
-            props.setViewData({
-                id: todo.id
-            });
-            props.setView('info');
+            navigate('/info/' + todo.id);
         }
 
         return <div key={todo.id} className="todo-item" onClick={handle}>
@@ -28,8 +31,8 @@ function TodoListView(props) {
     }
 
     return <div id="todo-list-container">
-        <div id="todo-create-button" onClick={() => props.setView('create')}>Create</div>
-        {props.todos.map(mapTodo)}
+        <div id="todo-create-button" onClick={() => navigate('/create')}>Create</div>
+        {todos.map(mapTodo)}
     </div>
 }
 

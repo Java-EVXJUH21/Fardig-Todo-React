@@ -1,7 +1,13 @@
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { todoListState, viewState } from "../state";
+import { useNavigate, useParams } from "react-router-dom";
 import "./TodoInfoView.css";
 
 function TodoInfoView(props) {
-    let todo = props.todos.find(all => all.id === props.viewData.id);
+    let { id } = useParams();
+    let navigate = useNavigate();
+    let todos = useRecoilValue(todoListState);
+    let todo = todos.find(all => all.id == id);
 
     const handleUndo = () => {
         props.updateTodo({
@@ -20,7 +26,7 @@ function TodoInfoView(props) {
 
     return <>
         <div id="todo-info-container">
-            <span onClick={() => props.setView('list')} id="todo-info-nav">
+            <span onClick={() => navigate('/')} id="todo-info-nav">
                 Back
             </span>
             <div id="todo-info-title">
