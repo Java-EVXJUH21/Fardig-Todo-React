@@ -1,45 +1,32 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TodoInfoView } from './views/TodoInfoView';
 import { TodoListView } from './views/TodoListView';
 import { TodoCreateView } from './views/TodoCreateView';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { todoListState, viewState } from './state';
 import { Routes, Route } from 'react-router-dom';
+import { apiGetTodos, apiCreateTodo, apiDeleteTodo, apiModifyTodo, convertAllTodos, convertTodo } from './api';
 
 function App() {
   let [todos, setTodos] = useRecoilState(todoListState);
 
   const removeTodo = todo => {
-    setTodos(todos.filter(all => all.id !== todo.id));
+    apiDeleteTodo(todo.id)
+    .then(todo => setTodos(todos.filter(all => all.id !== todo.id)));
   }
 
   const createTodo = description => {
-    let id = todos.length;
-    let todo = {
-      id,
-      description,
-      completed: false,
-      completedDate: null,
-      createdDate: new Date(),
-    }
-    setTodos([...todos, todo]);
-  }
-
-  const updateTodo = todo => {
-    setTodos(todos.map(all => {
-      if (all.id !== todo.id) 
-        return all;
-
-      return todo;
-    }));
+    apiCreateTodo(description)
+      .then(convertTodo)
+      .then(todo => setTodos([...todos, todo]));
   }
 
   return (
       <div className="App">
       <Routes>
         <Route path="/" element={<TodoListView removeTodo={removeTodo} />}/>
-        <Route path="/info/:id" element={<TodoInfoView updateTodo={updateTodo} />}/>
+        <Route path="/info/:id" element={<TodoInfoView />}/>
         <Route path="/create" element={<TodoCreateView createTodo={createTodo} />}/>
       </Routes>
       </div>

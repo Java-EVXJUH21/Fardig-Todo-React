@@ -1,23 +1,34 @@
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { todoListState, viewState } from "../state";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { convertTodo, apiGetTodo, apiModifyTodo } from "../api";
 import "./TodoInfoView.css";
 
 function TodoInfoView(props) {
     let { id } = useParams();
     let navigate = useNavigate();
-    let todos = useRecoilValue(todoListState);
-    let todo = todos.find(all => all.id == id);
+    let [todo, setTodo] = useState(null);
+
+    useEffect(() => {
+        apiGetTodo(id)
+            .then(convertTodo)
+            .then(setTodo);
+    }, []);
+
+    const updateTodo = todo => {
+        apiModifyTodo(todo.id, todo.completed, todo.completedDate)
+            .then(convertTodo)
+            .then(setTodo);
+    }
 
     const handleUndo = () => {
-        props.updateTodo({
+        updateTodo({
             ...todo,
             completed: false
         });
     }
 
     const handleComplete = () => {
-        props.updateTodo({
+        updateTodo({
             ...todo,
             completed: true,
             completedDate: new Date()
@@ -25,7 +36,7 @@ function TodoInfoView(props) {
     }
 
     return <>
-        <div id="todo-info-container">
+        {todo && <div id="todo-info-container">
             <span onClick={() => navigate('/')} id="todo-info-nav">
                 Back
             </span>
@@ -65,7 +76,7 @@ function TodoInfoView(props) {
                         onClick={handleComplete}
                     >Complete</div>}
             </div>
-        </div>
+        </div>}
     </>
 }
 

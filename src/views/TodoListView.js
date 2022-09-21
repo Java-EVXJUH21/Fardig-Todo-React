@@ -1,11 +1,19 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { todoListState, viewState } from "../state";
+import { apiGetTodos, convertAllTodos } from "../api";
 import "./TodoListView.css";
 
 function TodoListView(props) {
     let navigate = useNavigate();
-    let todos = useRecoilValue(todoListState);
+    let [todos, setTodos] = useRecoilState(todoListState);
+
+    useEffect(() => {
+        apiGetTodos()
+            .then(convertAllTodos)
+            .then(setTodos);
+    }, []);
 
     const removeTodo = (event, todo) => {
         event.stopPropagation();
